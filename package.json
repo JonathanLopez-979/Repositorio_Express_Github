@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/JonathanLopez-979/Repositorio_Express_Github/issues"
   },
-  "homepage": "https://github.com/JonathanLopez-979/Repositorio_Express_Github#readme"
+  "homepage": "https://github.com/JonathanLopez-979/Repositorio_Express_Github#readme",
+  "dependencies": {
+    "pg": "^8.20.0"
+  }
 }
