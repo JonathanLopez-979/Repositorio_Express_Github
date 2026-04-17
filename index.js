@@ -18,6 +18,16 @@ app.get('/alumnos', async (req, res) => {
   }
 });
 
+app.get('/materia', async (req, res) => {
+  try {
+    const resultado = await pool.query('SELECT * FROM materia');
+    res.json(resultado.rows);
+  } catch (error) {
+    console.error('Error al consultar materia:', error);
+    res.status(500).json({ error: 'Error al obtener los materia' });
+  }
+});
+
 app.post('/alumnos', async (req, res) => {
   try {
     const { nombre, apellido, edad, correo } = req.body;
@@ -38,6 +48,29 @@ app.post('/alumnos', async (req, res) => {
   } catch (error) {
     console.error('Error al insertar alumno:', error);
     res.status(500).json({ error: 'Error al insertar el alumno' });
+  }
+});
+
+app.post('/materia', async (req, res) => {
+  try {
+    const { nombre, semestre, creditos } = req.body;
+
+    if (!nombre || !semestre || !creditos) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+    }
+
+    const resultado = await pool.query(
+      'INSERT INTO materia (nombre, semestre, creditos) VALUES ($1, $2, $3) RETURNING *',
+      [nombre, semestre, creditos]
+    );
+
+    res.status(201).json({
+      mensaje: 'Materia insertado correctamente',
+      materia: resultado.rows[0]
+    });
+  } catch (error) {
+    console.error('Error al insertar materia:', error);
+    res.status(500).json({ error: 'Error al insertar materia' });
   }
 });
 
