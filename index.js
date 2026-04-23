@@ -18,16 +18,6 @@ app.get('/alumnos', async (req, res) => {
   }
 });
 
-app.get('/materia', async (req, res) => {
-  try {
-    const resultado = await pool.query('SELECT * FROM materia');
-    res.json(resultado.rows);
-  } catch (error) {
-    console.error('Error al consultar materia:', error);
-    res.status(500).json({ error: 'Error al obtener los materia' });
-  }
-});
-
 app.post('/alumnos', async (req, res) => {
   try {
     const { nombre, apellido, edad, correo } = req.body;
@@ -51,6 +41,37 @@ app.post('/alumnos', async (req, res) => {
   }
 });
 
+app.get('/alumnos/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const resultado = await pool.query(
+      'SELECT * FROM alumno WHERE id = $1',
+      [id]
+    );
+
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({ error: 'Alumno no encontrado' });
+    }
+
+    res.json(resultado.rows[0]);
+  } catch (error) {
+    console.error('Error al consultar alumno:', error);
+    res.status(500).json({ error: 'Error al obtener el alumno' });
+  }
+});
+
+
+app.get('/materia', async (req, res) => {
+  try {
+    const resultado = await pool.query('SELECT * FROM materia');
+    res.json(resultado.rows);
+  } catch (error) {
+    console.error('Error al consultar materia:', error);
+    res.status(500).json({ error: 'Error al obtener los materia' });
+  }
+});
+
 app.post('/materia', async (req, res) => {
   try {
     const { nombre, semestre, creditos } = req.body;
@@ -71,6 +92,26 @@ app.post('/materia', async (req, res) => {
   } catch (error) {
     console.error('Error al insertar materia:', error);
     res.status(500).json({ error: 'Error al insertar materia' });
+  }
+});
+
+app.get('/materia/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const resultado = await pool.query(
+      'SELECT * FROM materia WHERE id = $1',
+      [id]
+    );
+
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({ error: 'Materia no encontrada' });
+    }
+
+    res.json(resultado.rows[0]);
+  } catch (error) {
+    console.error('Error al consultar materia:', error);
+    res.status(500).json({ error: 'Error al obtener la materia' });
   }
 });
 
